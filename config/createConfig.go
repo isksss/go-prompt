@@ -14,7 +14,7 @@ const (
 func MakeConfigFile() (string, error) {
 	XDG_CONFIG_HOME := os.Getenv("XDG_CONFIG_HOME")
 	if XDG_CONFIG_HOME != "" {
-		home := getHomeDir()
+		home := GetHomeDir()
 		XDG_CONFIG_HOME = filepath.Join(home, ".config")
 	}
 	conf := filepath.Join(XDG_CONFIG_HOME, appName)
@@ -38,7 +38,7 @@ func MakeConfigFile() (string, error) {
 	return configFile, nil
 }
 
-func getHomeDir() string {
+func GetHomeDir() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		panic(err)
@@ -49,7 +49,7 @@ func getHomeDir() string {
 func GetConfigFilePath() string {
 	XDG_CONFIG_HOME := os.Getenv("XDG_CONFIG_HOME")
 	if XDG_CONFIG_HOME != "" {
-		home := getHomeDir()
+		home := GetHomeDir()
 		XDG_CONFIG_HOME = filepath.Join(home, ".config")
 	}
 	conf := filepath.Join(XDG_CONFIG_HOME, appName)
