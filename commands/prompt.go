@@ -3,6 +3,7 @@ package commands
 import (
 	"context"
 	"flag"
+	"fmt"
 	"os"
 	"os/user"
 	"strings"
@@ -19,11 +20,40 @@ func (c *PromptCommand) Synopsis() string         { return "Create Prompt" }
 func (c *PromptCommand) Usage() string            { return "prompt" }
 func (c *PromptCommand) SetFlags(f *flag.FlagSet) {}
 
+const (
+	allow         = ""
+	allow2        = ""
+	gitBranchMark = ""
+)
+
 func (c *PromptCommand) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	var PROMPT string
-	PROMPT = getUserName() + " @ " + getCurrentDir() + " $"
-	color.New(color.FgCyan).Add(color.BgHiWhite).Printf(PROMPT)
+	var PROMPT2 string
+	currentDir := getCurrentDir()
+	PROMPT = makeLine(currentDir)
+
+	if config.IsGitRepository() {
+		// git user
+		gitUser, _ := config.GetGitUser()
+		PROMPT2 += makeLine(gitUser)
+		// git branch
+		currentBranch, _ := config.GetCurrentBranch()
+		PROMPT += makeLine(gitBranchMark + " " + currentBranch)
+	}
+	co := color.New(color.FgBlack).Add(color.BgHiWhite)
+	line := co.Sprintf(PROMPT)
+	line2 := co.Sprintf(PROMPT2)
+	lastAllow := color.New(color.FgHiWhite).Sprintf(allow2 + " \n")
+
+	fmt.Printf(line + lastAllow + line2 + color.New(color.FgHiWhite).Sprintf(allow2))
+
 	return subcommands.ExitSuccess
+}
+
+// MakePart
+func makeLine(s string) string {
+	line := " " + s + " " + allow
+	return line
 }
 
 // ユーザ名取得
