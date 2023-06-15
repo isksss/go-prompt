@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -24,7 +23,7 @@ func GetCurrentBranch() (string, error) {
 	cmd.Stderr = os.Stderr
 	output, err := cmd.Output()
 	if err != nil {
-		return "", fmt.Errorf("カレントブランチの取得に失敗しました")
+		return "", err
 	}
 
 	branchName := strings.TrimSpace(string(output))
@@ -38,7 +37,7 @@ func GetGitUser() (string, error) {
 	cmd.Stderr = os.Stderr
 	output, err := cmd.Output()
 	if err != nil {
-		return "", fmt.Errorf("Gitユーザー名の取得に失敗しました")
+		return "", err
 	}
 
 	userName := strings.TrimSpace(string(output))
